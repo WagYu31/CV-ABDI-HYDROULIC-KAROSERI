@@ -4,9 +4,9 @@ export const COMPANY_INFO = {
   established: '30 Oktober 2018',
   skKaroseri: '1813 / HUB.02. 15.05 / Bid Lalulintas',
   sktIssuer: 'Dinas Perhubungan Republik Indonesia',
-  phone: '+6281318562423',
-  phoneFormatted: '+62 813-1856-2423',
-  whatsappNumber: '6281318562423',
+  phone: '+6282261513399',
+  phoneFormatted: '+62 822-6151-3399',
+  whatsappNumber: '6282261513399',
   email: 'darulpramarta@gmail.com',
   pdfPath: '/company_profile_cv_abdi_hydroulic.pdf',
   googleBusiness: {

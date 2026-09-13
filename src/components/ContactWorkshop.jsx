@@ -60,7 +60,7 @@ export default function ContactWorkshop() {
         'Hydrostatic Pressure Test Bench 250+ Bar',
         'Fasilitas Sandblasting & Spray Painting Oven',
       ],
-      picContact: '+62 813-1856-2423 (Bpk. Darul Pramarta)',
+      picContact: `${COMPANY_INFO.phoneFormatted} (Bpk. Darul Pramarta)`,
     },
     office: {
       id: 'office',
@@ -79,7 +79,7 @@ export default function ContactWorkshop() {
         'Konsultasi Kontrak Pengadaan Armada Skala Besar',
         'Meeting Room untuk Klien Korporasi & Dealer',
       ],
-      picContact: '+62 813-1856-2423 (Administrasi Fleet)',
+      picContact: `${COMPANY_INFO.phoneFormatted} (Administrasi Fleet)`,
     },
   };
 

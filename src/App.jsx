@@ -10,6 +10,7 @@ import ClientMatrix from './components/ClientMatrix';
 import PhotoGallery from './components/PhotoGallery';
 import ContactWorkshop from './components/ContactWorkshop';
 import Footer from './components/Footer';
+import { COMPANY_INFO } from './data/companyData';
 
 export default function App() {
   // Framer Motion luxury scroll progress spring
@@ -85,7 +86,7 @@ export default function App() {
         <motion.a
           whileHover={{ scale: 1.1, rotate: [0, -6, 6, 0], transition: { duration: 0.3 } }}
           whileTap={{ scale: 0.92 }}
-          href="https://wa.me/6281318562423?text=Halo%20CV%20Abdi%20Hydroulic,%20saya%20ingin%20konsultasi%20rancang%20bangun%20karoseri"
+          href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=Halo%20CV%20Abdi%20Hydroulic,%20saya%20ingin%20konsultasi%20rancang%20bangun%20karoseri`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 text-slate-950 flex items-center justify-center shadow-2xl shadow-emerald-500/40 border-2 border-white ring-4 ring-emerald-500/20 transition-all duration-200"
