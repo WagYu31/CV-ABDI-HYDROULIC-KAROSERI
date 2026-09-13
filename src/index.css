@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-heading: 'Space Grotesk', sans-serif;
+  }
+}
+
+/* Custom Luxury Technical Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+  border: 1px solid rgba(15, 23, 42, 0.05);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d97706;
+}
+
+/* Swiss Architectural Blueprint Grid (Light Substrate) */
+.blueprint-grid {
+  background-size: 36px 36px;
+  background-image: 
+    linear-gradient(to right, rgba(15, 23, 42, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.04) 1px, transparent 1px);
+}
+
+.blueprint-grid-dense {
+  background-size: 18px 18px;
+  background-image: 
+    linear-gradient(to right, rgba(217, 119, 6, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(217, 119, 6, 0.06) 1px, transparent 1px);
+}
+
+/* Luxury Light Ambient Halos */
+.radar-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(217, 119, 6, 0.08) 0%, transparent 70%);
+}
+
+.hydraulic-glow {
+  background: radial-gradient(circle at 50% 50%, rgba(2, 132, 199, 0.07) 0%, transparent 70%);
+}
+
+/* Subtle Technical Paper Texture */
+.paper-texture {
+  background-color: #ffffff;
+  background-image: radial-gradient(rgba(15, 23, 42, 0.05) 0.75px, transparent 0.75px);
+  background-size: 12px 12px;
+}
+
+/* Crosshair Decorator */
+.crosshair-corner {
+  position: relative;
+}
+.crosshair-corner::before {
+  content: '+';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: rgba(217, 119, 6, 0.6);
+  line-height: 1;
+}
+.crosshair-corner::after {
+  content: '+';
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: rgba(217, 119, 6, 0.6);
+  line-height: 1;
+}
+
+/* 21st.dev Keyframe Animations */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes marquee-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0%); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%); }
+  50%, 100% { transform: translateX(150%); }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-reverse 38s linear infinite;
+}
+
+.animate-marquee-reverse:hover {
+  animation-play-state: paused;
+}
+
+.animate-shimmer {
+  animation: shimmer 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
