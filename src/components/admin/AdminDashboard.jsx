@@ -27,7 +27,7 @@ import {
   Eye
 } from 'lucide-react';
 
-export default function AdminDashboard({ onLogout, onNavigateHome }) {
+function AdminDashboard({ onLogout, onNavigateHome }) {
   const { 
     products, 
     companyInfo, 
