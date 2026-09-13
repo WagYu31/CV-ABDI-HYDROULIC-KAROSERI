@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build --emptyOutDir",
+    "deploy": "vite build --emptyOutDir && cp -r dist/* . && cp dist/.htaccess .",
     "preview": "vite preview"
   },
   "keywords": [],

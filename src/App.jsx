@@ -20,11 +20,15 @@ function AppContent() {
 
   // Route state
   const checkIsAdmin = () => {
+    const p = (window.location.pathname || '').toLowerCase();
+    const h = (window.location.hash || '').toLowerCase();
     return (
-      window.location.pathname === '/admin' ||
-      window.location.pathname.startsWith('/admin/') ||
-      window.location.hash === '#admin' ||
-      window.location.hash.startsWith('#admin')
+      p === '/admin' ||
+      p.startsWith('/admin') ||
+      p.includes('admin') ||
+      h === '#admin' ||
+      h.startsWith('#admin') ||
+      h.includes('admin')
     );
   };
 
