@@ -175,7 +175,14 @@ export default function Footer() {
             © {new Date().getFullYear()} CV ABDI HYDROULIC. Seluruh Hak Cipta Dilindungi Undang-Undang.
           </div>
 
-          <div>
+          <div className="flex items-center gap-4">
+            <a
+              href="#admin"
+              className="inline-flex items-center gap-1 text-[11px] text-slate-400 hover:text-amber-600 transition font-semibold"
+            >
+              <span>Portal Admin</span>
+            </a>
+
             <motion.button
               whileHover={{ y: -3, scale: 1.03 }}
               whileTap={{ scale: 0.95 }}

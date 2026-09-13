@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { COMPANY_INFO, CHASSIS_BRANDS, BODY_TYPES } from '../data/companyData';
+import { useSiteData } from '../context/SiteDataContext';
 import { 
   Calculator, 
   Send, 
@@ -144,6 +145,7 @@ const OPTIONAL_FEATURES = [
 ];
 
 export default function FleetConfigurator() {
+  const { submitInquiry, companyInfo } = useSiteData();
   const [selectedChassis, setSelectedChassis] = useState(CHASSIS_BRANDS[0]);
   const [selectedBody, setSelectedBody] = useState(BODY_TYPES[0]);
   const [selectedCapacity, setSelectedCapacity] = useState(CAPACITY_OPTIONS[1].label + ' (' + CAPACITY_OPTIONS[1].detail + ')');
@@ -159,6 +161,19 @@ export default function FleetConfigurator() {
     } else {
       setFeatures([...features, featureName]);
     }
+  };
+
+  const handleSendToWhatsApp = () => {
+    // Log inquiry to Admin backend / local cache
+    submitInquiry({
+      name: 'Calon Klien Konfigurator',
+      company: '-',
+      phone: '-',
+      category: selectedBody,
+      chassis: `${selectedChassis} • ${selectedCapacity}`,
+      message: `Fitur Tambahan: ${features.join(', ') || 'Standar'}.${notes ? ` Catatan: ${notes}` : ''}`,
+      source: 'Konfigurator Rekayasa Armada',
+    });
   };
 
   const generateWhatsAppUrl = () => {
@@ -181,7 +196,8 @@ ${notes ? `5. CATATAN TEKNIS / DIMENSI KHUSUS:\n   "${notes}"\n` : ''}----------
 *Kepatuhan Mutu:* ISO 9001:2015 & Terdaftar DISHUB RI No. 1813/HUB.02.15.05.
 Mohon estimasi biaya fabrikasi, waktu pengerjaan, dan rancangan gambar teknik awal. Terima kasih.`;
 
-    return `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(text)}`;
+    const targetPhone = (companyInfo && companyInfo.phone) ? companyInfo.phone.replace(/[^0-9]/g, '') : COMPANY_INFO.whatsappNumber;
+    return `https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`;
   };
 
   const currentVehicle = BODY_IMAGE_MAP[selectedBody] || BODY_IMAGE_MAP['Wingbox Full Hidrolik'];
@@ -653,6 +669,7 @@ Mohon estimasi biaya fabrikasi, waktu pengerjaan, dan rancangan gambar teknik aw
                     href={generateWhatsAppUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={handleSendToWhatsApp}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-4 px-5 rounded-xl bg-slate-950 hover:bg-slate-900 text-white font-sans font-bold text-sm tracking-wide shadow-xl shadow-slate-950/20 border border-amber-500/40 flex items-center justify-center gap-2.5 transition-all text-center cursor-pointer group"

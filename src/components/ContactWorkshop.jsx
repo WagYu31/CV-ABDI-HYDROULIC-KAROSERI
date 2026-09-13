@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { COMPANY_INFO } from '../data/companyData';
+import { useSiteData } from '../context/SiteDataContext';
 import { 
   MapPin, 
   Phone, 
@@ -85,6 +86,8 @@ export default function ContactWorkshop() {
 
   const activeLoc = locationsData[activeMapTab];
 
+  const { submitInquiry, companyInfo } = useSiteData();
+
   const handleCopyAddress = () => {
     navigator.clipboard.writeText(activeLoc.address);
     setCopiedAddress(true);
@@ -93,6 +96,17 @@ export default function ContactWorkshop() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Log inquiry to Admin backend / local cache
+    submitInquiry({
+      name: formData.name,
+      company: formData.company,
+      phone: formData.phone,
+      category: formData.vehicleType,
+      message: formData.message,
+      source: 'Formulir Konsultasi Website',
+    });
+
     const text = `*PESAN INQUIRY DARI WEBSITE CV ABDI HYDROULIC*
 ------------------------------------------------
 *Nama:* ${formData.name}
@@ -103,7 +117,8 @@ export default function ContactWorkshop() {
 ${formData.message}
 ------------------------------------------------`;
 
-    window.open(`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(text)}`, '_blank');
+    const targetPhone = (companyInfo && companyInfo.phone) ? companyInfo.phone.replace(/[^0-9]/g, '') : COMPANY_INFO.whatsappNumber;
+    window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
   return (

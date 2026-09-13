@@ -35,3 +35,8 @@ extracted_assets/
 *.swift
 pdf_extracted_text.txt
 COMPANY PROFILE OK.pdf
+dist_cv_abdi_hydroulic.zip
+
+# Uploaded media from admin
+public/uploads/*
+!public/uploads/.gitkeep

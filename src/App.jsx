@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useSpring } from 'framer-motion';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -10,30 +10,104 @@ import ClientMatrix from './components/ClientMatrix';
 import PhotoGallery from './components/PhotoGallery';
 import ContactWorkshop from './components/ContactWorkshop';
 import Footer from './components/Footer';
+import AdminLogin from './components/admin/AdminLogin';
+import AdminDashboard from './components/admin/AdminDashboard';
+import { SiteDataProvider, useSiteData } from './context/SiteDataContext';
 import { COMPANY_INFO } from './data/companyData';
 
-export default function App() {
-  // Framer Motion luxury scroll progress spring
-  const { scrollYProgress } = useScroll();
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 120,
-    damping: 30,
-    restDelta: 0.001,
-  });
+function AppContent() {
+  const { companyInfo } = useSiteData();
 
+  // Route state
+  const checkIsAdmin = () => {
+    return (
+      window.location.pathname === '/admin' ||
+      window.location.pathname.startsWith('/admin/') ||
+      window.location.hash === '#admin' ||
+      window.location.hash.startsWith('#admin')
+    );
+  };
+
+  const [isAdmin, setIsAdmin] = useState(checkIsAdmin);
+  const [authToken, setAuthToken] = useState(() => sessionStorage.getItem('abdi_admin_token'));
+
+  useEffect(() => {
+    const handleUrlChange = () => {
+      setIsAdmin(checkIsAdmin());
+    };
+
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
+  }, []);
+
+  const navigateToAdmin = () => {
+    window.location.hash = '#admin';
+    setIsAdmin(true);
+  };
+
+  const navigateToHome = () => {
+    window.location.hash = '';
+    if (window.location.pathname.startsWith('/admin')) {
+      window.history.pushState(null, '', '/');
+    }
+    setIsAdmin(false);
+  };
+
+  const handleLoginSuccess = (token) => {
+    setAuthToken(token);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('abdi_admin_token');
+    setAuthToken(null);
+    try {
+      fetch('/api/auth.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'logout' }),
+      });
+    } catch (_) {}
+  };
+
+  // ----------------------------------------------------
+  // ADMIN VIEW
+  // ----------------------------------------------------
+  if (isAdmin) {
+    if (!authToken) {
+      return (
+        <AdminLogin
+          onLoginSuccess={handleLoginSuccess}
+          onBackToHome={navigateToHome}
+        />
+      );
+    }
+
+    return (
+      <AdminDashboard
+        onLogout={handleLogout}
+        onNavigateHome={navigateToHome}
+      />
+    );
+  }
+
+  // ----------------------------------------------------
+  // PUBLIC WEBSITE VIEW
+  // ----------------------------------------------------
   const handleScrollToCatalog = () => {
     const el = document.getElementById('katalog');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const activeWhatsAppNumber = (companyInfo && companyInfo.phone) 
+    ? companyInfo.phone.replace(/[^0-9]/g, '') 
+    : COMPANY_INFO.whatsappNumber;
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col selection:bg-amber-500 selection:text-slate-950 relative">
-      {/* Framer Motion Top Reading/Scroll Progress Bar */}
-      <motion.div
-        style={{ scaleX }}
-        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-amber-600 to-amber-400 origin-left z-50 pointer-events-none shadow-[0_0_12px_rgba(217,119,6,0.6)]"
-      />
-
       {/* 1. Industrial Navbar */}
       <Navbar />
 
@@ -86,7 +160,7 @@ export default function App() {
         <motion.a
           whileHover={{ scale: 1.1, rotate: [0, -6, 6, 0], transition: { duration: 0.3 } }}
           whileTap={{ scale: 0.92 }}
-          href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=Halo%20CV%20Abdi%20Hydroulic,%20saya%20ingin%20konsultasi%20rancang%20bangun%20karoseri`}
+          href={`https://wa.me/${activeWhatsAppNumber}?text=Halo%20CV%20Abdi%20Hydroulic,%20saya%20ingin%20konsultasi%20rancang%20bangun%20karoseri`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-14 h-14 rounded-full bg-gradient-to-tr from-emerald-600 to-emerald-400 text-slate-950 flex items-center justify-center shadow-2xl shadow-emerald-500/40 border-2 border-white ring-4 ring-emerald-500/20 transition-all duration-200"
@@ -99,5 +173,13 @@ export default function App() {
         </motion.a>
       </motion.aside>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <SiteDataProvider>
+      <AppContent />
+    </SiteDataProvider>
   );
 }

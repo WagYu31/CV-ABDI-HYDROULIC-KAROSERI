@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PRODUCT_CATALOG, COMPANY_INFO } from '../data/companyData';
+import { useSiteData } from '../context/SiteDataContext';
 import { 
   Truck, 
   Layers, 
@@ -35,9 +36,12 @@ export default function ProductCatalog() {
     'Utilitas & Pemeliharaan',
   ];
 
+  const { products } = useSiteData();
+  const currentCatalog = products && products.length > 0 ? products : PRODUCT_CATALOG;
+
   const filteredProducts = activeCategory === 'Semua'
-    ? PRODUCT_CATALOG
-    : PRODUCT_CATALOG.filter((p) => p.category === activeCategory || p.category.includes(activeCategory));
+    ? currentCatalog
+    : currentCatalog.filter((p) => p.category === activeCategory || (p.category && p.category.includes(activeCategory)));
 
   return (
     <section id="katalog" className="py-24 bg-[#F8FAFC] relative">

@@ -12,6 +12,7 @@ import {
   Truck
 } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
+import { useSiteData } from '../context/SiteDataContext';
 
 export default function PhotoGallery() {
   const [activePhoto, setActivePhoto] = useState(null);
@@ -132,17 +133,20 @@ export default function PhotoGallery() {
     },
   ];
 
+  const { gallery } = useSiteData();
+  const currentGallery = gallery && gallery.length > 0 ? gallery : galleryItems;
+
   const filterTabs = [
-    { key: 'all', label: 'Semua Armada', count: galleryItems.length },
-    { key: 'gov', label: 'Pemerintahan & BUMD', count: galleryItems.filter(i => i.group === 'gov').length },
-    { key: 'port', label: 'Pelabuhan & Trailer', count: galleryItems.filter(i => i.group === 'port').length },
-    { key: 'wingbox', label: 'Wingbox & Logistik', count: galleryItems.filter(i => i.group === 'wingbox').length },
-    { key: 'mining', label: 'Tipper & Scissor Lift', count: galleryItems.filter(i => i.group === 'mining').length },
+    { key: 'all', label: 'Semua Armada', count: currentGallery.length },
+    { key: 'gov', label: 'Pemerintahan & BUMD', count: currentGallery.filter(i => i.group === 'gov').length },
+    { key: 'port', label: 'Pelabuhan & Trailer', count: currentGallery.filter(i => i.group === 'port').length },
+    { key: 'wingbox', label: 'Wingbox & Logistik', count: currentGallery.filter(i => i.group === 'wingbox').length },
+    { key: 'mining', label: 'Tipper & Scissor Lift', count: currentGallery.filter(i => i.group === 'mining').length },
   ];
 
   const filteredItems = activeFilter === 'all'
-    ? galleryItems
-    : galleryItems.filter(item => item.group === activeFilter);
+    ? currentGallery
+    : currentGallery.filter(item => item.group === activeFilter);
 
   // Keyboard navigation for Lightbox
   const handleKeyDown = useCallback((e) => {
