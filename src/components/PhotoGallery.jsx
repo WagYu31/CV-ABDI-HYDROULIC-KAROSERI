@@ -116,6 +116,14 @@ export default function PhotoGallery() {
     },
     {
       id: 13,
+      title: 'Arm Roll Hooklift Kontainer - Dinas Lingkungan Hidup (DLH) Kab. Malang',
+      category: 'Sanitasi & Pengelolaan Sampah',
+      group: 'gov',
+      src: '/assets/truck_armroll_dlh_malang_side.jpg',
+      desc: 'Unit karoseri Arm Roll Hooklift sampah pada sasis Isuzu Elf 6-Speed untuk Pemerintah Kabupaten Malang. Dilengkapi kontainer sampah TP CONT 001 dan sistem hidrolik penarik/penurun otomatis.',
+    },
+    {
+      id: 14,
       title: 'Carrier Sepeda Motor 2 Tingkat (Double Decker)',
       category: 'Car & Bike Carrier',
       group: 'wingbox',

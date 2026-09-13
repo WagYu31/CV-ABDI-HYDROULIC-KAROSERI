@@ -39,8 +39,8 @@ const BODY_IMAGE_MAP = {
     tag: 'Mobilisasi Alat Berat',
   },
   'Arm Roll Pengangkut Kontainer': {
-    image: '/assets/truck_carrier_motor_2.jpg',
-    name: 'Arm Roll Hooklift Kontainer',
+    image: '/assets/truck_armroll_dlh_malang_side.jpg',
+    name: 'Arm Roll Hooklift - DLH Kab. Malang',
     tag: 'Sanitasi & Pengelolaan Sampah/B3',
   },
   'Derek & Flatbed Towing Hidrolik': {

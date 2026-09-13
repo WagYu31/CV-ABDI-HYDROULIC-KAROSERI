@@ -16,6 +16,12 @@ import TiltedCard from './reactbits/TiltedCard';
 export default function ProductCatalog() {
   const [activeCategory, setActiveCategory] = useState('Semua');
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const handleOpenProduct = (product) => {
+    setSelectedProduct(product);
+    setSelectedImageIndex(0);
+  };
 
   const categories = [
     'Semua',
@@ -121,7 +127,7 @@ export default function ProductCatalog() {
                     specList={[product.specs[0].value, product.specs[3].value]}
                     containerHeight="240px"
                     rotateAmplitude={8}
-                    onClick={() => setSelectedProduct(product)}
+                    onClick={() => handleOpenProduct(product)}
                   />
                 </div>
 
@@ -158,7 +164,7 @@ export default function ProductCatalog() {
                   {/* Actions */}
                   <div className="flex items-center gap-2 pt-2">
                     <button
-                      onClick={() => setSelectedProduct(product)}
+                      onClick={() => handleOpenProduct(product)}
                       className="flex-1 py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-mono font-bold border border-slate-200 transition-colors flex items-center justify-center gap-1.5 active:scale-[0.98]"
                     >
                       <span>SPESIFIKASI DETAIL</span>
@@ -211,19 +217,56 @@ export default function ProductCatalog() {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Modal Image */}
-              <div className="relative rounded-2xl overflow-hidden aspect-[16/9] mb-6 border border-slate-200">
+              {/* Modal Image Box with Ambient Backdrop & Object Contain */}
+              <div className="relative rounded-2xl overflow-hidden h-64 sm:h-80 mb-3 bg-slate-950 border border-slate-200 flex items-center justify-center">
+                {/* Ambient Blurred Backdrop */}
                 <img
-                  src={selectedProduct.image}
-                  alt={selectedProduct.name}
-                  className="w-full h-full object-cover"
+                  src={selectedProduct.gallery ? selectedProduct.gallery[selectedImageIndex] : selectedProduct.image}
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 w-full h-full object-cover blur-2xl scale-125 opacity-35 pointer-events-none"
                 />
-                <div className="absolute top-3 left-3">
-                  <span className="px-3 py-1 rounded-full text-xs font-mono bg-white text-slate-950 font-bold shadow-md">
+                <div className="absolute inset-0 bg-slate-950/60" />
+
+                {/* Main Image 100% Intact */}
+                <img
+                  src={selectedProduct.gallery ? selectedProduct.gallery[selectedImageIndex] : selectedProduct.image}
+                  alt={selectedProduct.name}
+                  className="relative z-10 w-full h-full object-contain p-2 drop-shadow-md select-none"
+                />
+
+                <div className="absolute top-3 left-3 z-20">
+                  <span className="px-3 py-1 rounded-full text-xs font-sans bg-amber-500 text-slate-950 font-bold shadow-md">
                     {selectedProduct.badge}
                   </span>
                 </div>
+
+                {selectedProduct.gallery && selectedProduct.gallery.length > 1 && (
+                  <div className="absolute bottom-3 right-3 z-20 px-2.5 py-1 rounded-md bg-slate-950/80 backdrop-blur-md text-white font-mono text-[11px] font-bold border border-white/20 shadow-sm">
+                    Foto {selectedImageIndex + 1} / {selectedProduct.gallery.length}
+                  </div>
+                )}
               </div>
+
+              {/* Multi-Photo Gallery Selector if available */}
+              {selectedProduct.gallery && selectedProduct.gallery.length > 1 && (
+                <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+                  {selectedProduct.gallery.map((imgUrl, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setSelectedImageIndex(idx)}
+                      className={`relative w-20 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
+                        selectedImageIndex === idx
+                          ? 'border-amber-500 ring-2 ring-amber-500/40 scale-105 shadow-sm'
+                          : 'border-slate-200 opacity-60 hover:opacity-100'
+                      }`}
+                    >
+                      <img src={imgUrl} alt="" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
 
               {/* Modal Title & Info */}
               <span className="text-xs font-mono text-amber-700 font-bold uppercase tracking-wider">
