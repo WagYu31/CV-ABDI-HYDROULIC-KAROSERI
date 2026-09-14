@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PRODUCT_CATALOG, COMPANY_INFO } from '../data/companyData';
 import { useSiteData } from '../context/SiteDataContext';
@@ -10,7 +10,11 @@ import {
   SlidersHorizontal,
   X,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Camera,
+  Image as ImageIcon
 } from 'lucide-react';
 import TiltedCard from './reactbits/TiltedCard';
 
@@ -23,6 +27,51 @@ export default function ProductCatalog() {
     setSelectedProduct(product);
     setSelectedImageIndex(0);
   };
+
+  // Combine product's main image and gallery images into one unified array
+  const productImages = useMemo(() => {
+    if (!selectedProduct) return [];
+    const list = [];
+    if (selectedProduct.image && typeof selectedProduct.image === 'string' && selectedProduct.image.trim()) {
+      list.push(selectedProduct.image.trim());
+    }
+    if (Array.isArray(selectedProduct.gallery)) {
+      selectedProduct.gallery.forEach((img) => {
+        if (typeof img === 'string' && img.trim() && !list.includes(img.trim())) {
+          list.push(img.trim());
+        }
+      });
+    }
+    return list;
+  }, [selectedProduct]);
+
+  const currentImage = productImages[selectedImageIndex] || selectedProduct?.image || '';
+
+  const handlePrevImage = (e) => {
+    e?.stopPropagation();
+    if (productImages.length <= 1) return;
+    setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : productImages.length - 1));
+  };
+
+  const handleNextImage = (e) => {
+    e?.stopPropagation();
+    if (productImages.length <= 1) return;
+    setSelectedImageIndex((prev) => (prev < productImages.length - 1 ? prev + 1 : 0));
+  };
+
+  // Keyboard navigation for image modal
+  useEffect(() => {
+    if (!selectedProduct || productImages.length <= 1) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') {
+        setSelectedImageIndex((prev) => (prev > 0 ? prev - 1 : productImages.length - 1));
+      } else if (e.key === 'ArrowRight') {
+        setSelectedImageIndex((prev) => (prev < productImages.length - 1 ? prev + 1 : 0));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedProduct, productImages.length]);
 
   const categories = [
     'Semua',
@@ -138,9 +187,17 @@ export default function ProductCatalog() {
                 {/* Card Meta & Details */}
                 <div className="px-6 pb-6 pt-2 flex flex-col flex-1 justify-between space-y-4">
                   <div>
-                    <span className="text-[11px] font-mono text-amber-700 uppercase tracking-wider font-bold">
-                      {product.category}
-                    </span>
+                    <div className="flex items-center justify-between gap-2 mb-1">
+                      <span className="text-[11px] font-mono text-amber-700 uppercase tracking-wider font-bold">
+                        {product.category}
+                      </span>
+                      {product.gallery && product.gallery.length > 0 && (
+                        <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-800 border border-amber-500/30">
+                          <Camera className="w-3 h-3 text-amber-600" />
+                          <span>{1 + product.gallery.length} Foto</span>
+                        </span>
+                      )}
+                    </div>
                     <h3 className="text-xl font-bold text-slate-950 tracking-tight mt-0.5 group-hover:text-amber-700 transition-colors">
                       {product.name}
                     </h3>
@@ -196,7 +253,7 @@ export default function ProductCatalog() {
 
       </div>
 
-      {/* Product Detail Modal with AnimatePresence */}
+      {/* POPUP MODAL DETAIL SPESIFIKASI & MULTI-ANGLE CAROUSEL */}
       <AnimatePresence>
         {selectedProduct && (
           <motion.div 
@@ -216,28 +273,34 @@ export default function ProductCatalog() {
               {/* Close Button */}
               <button
                 onClick={() => setSelectedProduct(null)}
-                className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                className="absolute top-5 right-5 p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer z-30"
+                title="Tutup (Esc)"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {/* Modal Image Box with Ambient Backdrop & Object Contain */}
-              <div className="relative rounded-2xl overflow-hidden h-64 sm:h-80 mb-3 bg-slate-950 border border-slate-200 flex items-center justify-center">
+              <div className="relative rounded-2xl overflow-hidden h-64 sm:h-80 mb-3 bg-slate-950 border border-slate-200 flex items-center justify-center group select-none">
                 {/* Ambient Blurred Backdrop */}
-                <img
-                  src={selectedProduct.gallery ? selectedProduct.gallery[selectedImageIndex] : selectedProduct.image}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 w-full h-full object-cover blur-2xl scale-125 opacity-35 pointer-events-none"
-                />
+                {currentImage && (
+                  <img
+                    src={currentImage}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover blur-2xl scale-125 opacity-35 pointer-events-none"
+                  />
+                )}
                 <div className="absolute inset-0 bg-slate-950/60" />
 
                 {/* Main Image 100% Intact */}
-                <img
-                  src={selectedProduct.gallery ? selectedProduct.gallery[selectedImageIndex] : selectedProduct.image}
-                  alt={selectedProduct.name}
-                  className="relative z-10 w-full h-full object-contain p-2 drop-shadow-md select-none"
-                />
+                {currentImage && (
+                  <img
+                    key={currentImage}
+                    src={currentImage}
+                    alt={selectedProduct.name}
+                    className="relative z-10 w-full h-full object-contain p-2 drop-shadow-md select-none transition-all duration-300"
+                  />
+                )}
 
                 <div className="absolute top-3 left-3 z-20">
                   <span className="px-3 py-1 rounded-full text-xs font-sans bg-amber-500 text-slate-950 font-bold shadow-md">
@@ -245,30 +308,67 @@ export default function ProductCatalog() {
                   </span>
                 </div>
 
-                {selectedProduct.gallery && selectedProduct.gallery.length > 1 && (
-                  <div className="absolute bottom-3 right-3 z-20 px-2.5 py-1 rounded-md bg-slate-950/80 backdrop-blur-md text-white font-mono text-[11px] font-bold border border-white/20 shadow-sm">
-                    Foto {selectedImageIndex + 1} / {selectedProduct.gallery.length}
-                  </div>
+                {/* Tombol Panah Kiri / Kanan jika ada lebih dari 1 foto */}
+                {productImages.length > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={handlePrevImage}
+                      className="absolute left-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-slate-950/80 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 transition-all shadow-lg active:scale-95 cursor-pointer"
+                      title="Foto Sebelumnya"
+                    >
+                      <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleNextImage}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 z-20 p-2.5 rounded-full bg-slate-950/80 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 transition-all shadow-lg active:scale-95 cursor-pointer"
+                      title="Foto Selanjutnya"
+                    >
+                      <ChevronRight className="w-5 h-5" />
+                    </button>
+
+                    {/* Counter Badge */}
+                    <div className="absolute bottom-3 right-3 z-20 px-3 py-1 rounded-lg bg-slate-950/85 backdrop-blur-md text-white font-mono text-[11px] font-bold border border-white/20 shadow-sm flex items-center gap-1.5">
+                      <ImageIcon className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Foto {selectedImageIndex + 1} / {productImages.length}</span>
+                    </div>
+                  </>
                 )}
               </div>
 
               {/* Multi-Photo Gallery Selector if available */}
-              {selectedProduct.gallery && selectedProduct.gallery.length > 1 && (
-                <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
-                  {selectedProduct.gallery.map((imgUrl, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => setSelectedImageIndex(idx)}
-                      className={`relative w-20 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 ${
-                        selectedImageIndex === idx
-                          ? 'border-amber-500 ring-2 ring-amber-500/40 scale-105 shadow-sm'
-                          : 'border-slate-200 opacity-60 hover:opacity-100'
-                      }`}
-                    >
-                      <img src={imgUrl} alt="" className="w-full h-full object-cover" />
-                    </button>
-                  ))}
+              {productImages.length > 1 && (
+                <div className="mb-5">
+                  <div className="flex items-center justify-between text-xs font-medium text-slate-600 mb-2 px-0.5">
+                    <span className="font-semibold text-slate-800">
+                      Pilihan Sudut Foto Armada ({productImages.length} Foto):
+                    </span>
+                    <span className="text-[11px] text-amber-700 font-mono">
+                      Klik foto untuk berganti
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2.5 overflow-x-auto pb-1.5 pt-0.5 scrollbar-thin">
+                    {productImages.map((imgUrl, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedImageIndex(idx)}
+                        className={`relative w-20 h-14 rounded-xl overflow-hidden border-2 transition-all shrink-0 cursor-pointer ${
+                          selectedImageIndex === idx
+                            ? 'border-amber-500 ring-2 ring-amber-500/40 scale-105 shadow-md'
+                            : 'border-slate-200 opacity-60 hover:opacity-100 hover:border-slate-400'
+                        }`}
+                      >
+                        <img src={imgUrl} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
+                        {idx === 0 && (
+                          <span className="absolute bottom-0 inset-x-0 bg-slate-950/85 text-[9px] text-amber-400 font-bold py-0.5 text-center leading-tight">
+                            Utama
+                          </span>
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 

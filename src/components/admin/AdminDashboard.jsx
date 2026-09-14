@@ -24,7 +24,8 @@ import {
   Search, 
   Filter,
   ArrowUpRight,
-  Eye
+  Eye,
+  Star
 } from 'lucide-react';
 
 function AdminDashboard({ onLogout, onNavigateHome }) {
@@ -885,22 +886,56 @@ function AdminDashboard({ onLogout, onNavigateHome }) {
                       </div>
 
                       {editingProduct.gallery && editingProduct.gallery.length > 0 ? (
-                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
-                          {editingProduct.gallery.map((imgUrl, idx) => (
-                            <div key={idx} className="relative group aspect-video bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800">
-                              <img src={imgUrl} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  const updated = editingProduct.gallery.filter((_, i) => i !== idx);
-                                  setEditingProduct({ ...editingProduct, gallery: updated });
-                                }}
-                                className="absolute top-1 right-1 bg-red-600 hover:bg-red-500 text-white p-1 rounded-md opacity-90 group-hover:opacity-100 transition"
-                              >
-                                <X className="w-3 h-3" />
-                              </button>
-                            </div>
-                          ))}
+                        <div className="space-y-2.5">
+                          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                            {editingProduct.gallery.map((imgUrl, idx) => (
+                              <div key={idx} className="relative group aspect-video bg-zinc-900 rounded-lg overflow-hidden border border-zinc-800 shadow-sm">
+                                <img src={imgUrl} alt={`Angle ${idx + 1}`} className="w-full h-full object-cover" />
+                                
+                                {/* Tombol Hapus */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const updated = editingProduct.gallery.filter((_, i) => i !== idx);
+                                    setEditingProduct({ ...editingProduct, gallery: updated });
+                                  }}
+                                  className="absolute top-1 right-1 bg-red-600 hover:bg-red-500 text-white p-1 rounded-md opacity-90 group-hover:opacity-100 transition shadow"
+                                  title="Hapus foto ini"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+
+                                {/* Tombol Tukar Jadi Foto Utama */}
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const currentMain = editingProduct.image;
+                                    const targetImg = imgUrl;
+                                    const newGallery = editingProduct.gallery.filter((_, i) => i !== idx);
+                                    if (currentMain) newGallery.unshift(currentMain);
+                                    setEditingProduct({
+                                      ...editingProduct,
+                                      image: targetImg,
+                                      gallery: newGallery,
+                                    });
+                                    showToast('Foto berhasil dipindahkan menjadi Foto Utama!');
+                                  }}
+                                  className="absolute bottom-1 inset-x-1 py-1 px-1.5 bg-slate-950/90 hover:bg-amber-500 hover:text-slate-950 text-amber-400 text-[10px] font-bold rounded flex items-center justify-center gap-1 transition opacity-90 group-hover:opacity-100 shadow"
+                                  title="Jadikan Foto Utama (Cover Katalog Depan)"
+                                >
+                                  <Star className="w-3 h-3 text-amber-400 group-hover:text-slate-950" />
+                                  <span>Jadikan Utama</span>
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="text-[11px] text-zinc-400 bg-zinc-900/70 p-2.5 rounded-lg border border-zinc-800/80 flex items-start gap-2">
+                            <span className="text-amber-400 font-bold shrink-0">💡 Info:</span>
+                            <span>
+                              <strong>Foto Utama</strong> di atas tampil sebagai cover kartu depan katalog. Semua foto (Foto Utama + Foto Tambahan) otomatis digabung dan dapat digeser (slide) oleh pengunjung saat membuka <em>Spesifikasi Detail</em>.
+                            </span>
+                          </div>
                         </div>
                       ) : (
                         <p className="text-[11px] text-zinc-500 italic">
