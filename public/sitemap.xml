@@ -3,37 +3,13 @@
   <url>
     <loc>https://abdihydroulickaroseri.my.id/</loc>
     <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://abdihydroulickaroseri.my.id/#katalog</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://abdihydroulickaroseri.my.id/#konfigurator</loc>
+    <loc>https://abdihydroulickaroseri.my.id/company_profile_cv_abdi_hydroulic.pdf</loc>
     <lastmod>2026-09-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://abdihydroulickaroseri.my.id/#galeri</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://abdihydroulickaroseri.my.id/#visi-misi</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://abdihydroulickaroseri.my.id/#konsultasi</loc>
-    <lastmod>2026-09-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
   </url>
 </urlset>
