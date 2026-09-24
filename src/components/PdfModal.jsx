@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, ChevronLeft, ChevronRight, FileText, ExternalLink } from 'lucide-react';
 import { COMPANY_INFO } from '../data/companyData';
@@ -6,6 +6,23 @@ import { COMPANY_INFO } from '../data/companyData';
 export default function PdfModal({ isOpen, onClose }) {
   const [currentPage, setCurrentPage] = useState(1);
   const totalPages = 6;
+
+  // Reset to page 1 on open
+  useEffect(() => {
+    if (isOpen) setCurrentPage(1);
+  }, [isOpen]);
+
+  // Keyboard navigation
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowLeft') setCurrentPage((p) => Math.max(1, p - 1));
+      else if (e.key === 'ArrowRight') setCurrentPage((p) => Math.min(totalPages, p + 1));
+      else if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   const pageTitles = [
     'Halaman 1: Cover Resmi, SKT DISHUB & Alamat Workshop/Office',
@@ -51,6 +68,17 @@ export default function PdfModal({ isOpen, onClose }) {
               </div>
 
               <div className="flex items-center gap-2">
+                <a
+                  href={COMPANY_INFO.pdfPath}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono font-semibold transition-colors"
+                  title="Buka File PDF di Tab Baru Browser"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Buka Tab Baru</span>
+                </a>
+
                 <motion.a
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
@@ -59,12 +87,13 @@ export default function PdfModal({ isOpen, onClose }) {
                   className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-950 hover:bg-slate-850 text-white text-xs font-mono font-bold transition-all shadow-md"
                 >
                   <Download className="w-3.5 h-3.5 text-amber-400" />
-                  <span>UNDUH PDF ASLI (13 MB)</span>
+                  <span>UNDUH PDF (13 MB)</span>
                 </motion.a>
 
                 <button
                   onClick={onClose}
-                  className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors"
+                  className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+                  title="Tutup (Esc)"
                 >
                   <X className="w-5 h-5" />
                 </button>

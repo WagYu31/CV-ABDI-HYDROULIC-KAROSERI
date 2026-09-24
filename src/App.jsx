@@ -10,6 +10,7 @@ import ClientMatrix from './components/ClientMatrix';
 import PhotoGallery from './components/PhotoGallery';
 import ContactWorkshop from './components/ContactWorkshop';
 import Footer from './components/Footer';
+import PdfModal from './components/PdfModal';
 import AdminLogin from './components/admin/AdminLogin';
 import AdminDashboard from './components/admin/AdminDashboard';
 import { SiteDataProvider, useSiteData } from './context/SiteDataContext';
@@ -17,6 +18,7 @@ import { COMPANY_INFO } from './data/companyData';
 
 function AppContent() {
   const { companyInfo } = useSiteData();
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
 
   // Route state
   const checkIsAdmin = () => {
@@ -113,15 +115,18 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-[#0F172A] flex flex-col selection:bg-amber-500 selection:text-slate-950 relative">
       {/* 1. Industrial Navbar */}
-      <Navbar />
+      <Navbar onOpenPdfModal={() => setIsPdfModalOpen(true)} />
 
       {/* 2. Main Sections */}
       <main className="flex-1">
         {/* Hero Section */}
-        <Hero onExploreCatalog={handleScrollToCatalog} />
+        <Hero 
+          onExploreCatalog={handleScrollToCatalog} 
+          onOpenPdfModal={() => setIsPdfModalOpen(true)} 
+        />
 
         {/* Legalitas & DISHUB Verification */}
-        <LegalitasBadge />
+        <LegalitasBadge onOpenPdfModal={() => setIsPdfModalOpen(true)} />
 
         {/* 10 Lini Karoseri Catalog */}
         <ProductCatalog />
@@ -130,7 +135,7 @@ function AppContent() {
         <FleetConfigurator />
 
         {/* Visi, Misi & 4 Pilar Standar Mutu */}
-        <CompanyVision />
+        <CompanyVision onOpenPdfModal={() => setIsPdfModalOpen(true)} />
 
         {/* 21 Mitra & Klien Korporasi Nasional */}
         <ClientMatrix />
@@ -143,7 +148,13 @@ function AppContent() {
       </main>
 
       {/* 3. Footer */}
-      <Footer />
+      <Footer onOpenPdfModal={() => setIsPdfModalOpen(true)} />
+
+      {/* 4. Global Interactive Company Profile PDF Reader Modal */}
+      <PdfModal 
+        isOpen={isPdfModalOpen} 
+        onClose={() => setIsPdfModalOpen(false)} 
+      />
 
       {/* 4. Framer Motion Floating Instant WhatsApp Action Button */}
       <motion.aside

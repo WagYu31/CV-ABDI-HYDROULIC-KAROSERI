@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { COMPANY_INFO } from '../data/companyData';
-import { ShieldCheck, Scale, Award, Check } from 'lucide-react';
+import { ShieldCheck, Scale, Award, Check, FileText, Download } from 'lucide-react';
 import SpotlightCard from './reactbits/SpotlightCard';
 import DecryptedText from './reactbits/DecryptedText';
 
-export default function LegalitasBadge() {
+export default function LegalitasBadge({ onOpenPdfModal }) {
   const compliancePoints = [
     {
       title: 'Terdaftar Resmi Dinas Perhubungan',
@@ -111,6 +111,26 @@ export default function LegalitasBadge() {
                   <p>• Berdiri Mandiri: 30 Oktober 2018</p>
                   <p>• Workshop: Setu, Kab. Bekasi, Jawa Barat</p>
                   <p>• Bidang: Perakitan Armada Niaga & Rekayasa Hidrolik</p>
+                </div>
+
+                <div className="pt-4 border-t border-slate-200/80 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={onOpenPdfModal}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-mono font-bold shadow-md shadow-amber-600/20 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                  >
+                    <FileText className="w-3.5 h-3.5" />
+                    <span>BACA COMPANY PROFILE</span>
+                  </button>
+                  <a
+                    href={COMPANY_INFO.pdfPath}
+                    download="Company_Profile_CV_Abdi_Hydroulic.pdf"
+                    className="inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-700 hover:text-slate-950 border border-slate-300 text-xs font-mono font-bold transition-all shadow-xs"
+                    title="Unduh File Asli PDF (13 MB)"
+                  >
+                    <Download className="w-3.5 h-3.5 text-amber-600" />
+                    <span>UNDUH (13 MB)</span>
+                  </a>
                 </div>
               </div>
             </SpotlightCard>

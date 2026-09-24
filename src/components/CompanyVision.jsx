@@ -7,10 +7,11 @@ import {
   CheckCircle2, 
   Layers, 
   Wrench, 
-  Compass
+  Compass,
+  FileText
 } from 'lucide-react';
 
-export default function CompanyVision() {
+export default function CompanyVision({ onOpenPdfModal }) {
   const isoPillars = [
     {
       code: 'ISO 9001:2015',
@@ -312,6 +313,17 @@ export default function CompanyVision() {
               <span>SKT DISHUB RI:</span>
               <span className="text-amber-400 font-bold">{COMPANY_INFO.skKaroseri}</span>
             </div>
+
+            {onOpenPdfModal && (
+              <button
+                type="button"
+                onClick={onOpenPdfModal}
+                className="mt-4 w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-mono font-bold flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-md"
+              >
+                <FileText className="w-3.5 h-3.5 text-slate-950" />
+                <span>BACA COMPANY PROFILE LENGKAP</span>
+              </button>
+            )}
           </motion.div>
 
         </div>

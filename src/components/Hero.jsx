@@ -11,13 +11,14 @@ import {
   PhoneCall,
   Sparkles,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  FileText
 } from 'lucide-react';
 import DecryptedText from './reactbits/DecryptedText';
 import CountUp from './reactbits/CountUp';
 import ShimmerButton from './21st/ShimmerButton';
 
-export default function Hero({ onExploreCatalog }) {
+export default function Hero({ onExploreCatalog, onOpenPdfModal }) {
   const [activeIdx, setActiveIdx] = useState(0);
 
   const heroShowcaseList = [
@@ -168,7 +169,7 @@ export default function Hero({ onExploreCatalog }) {
             {/* 4. Action CTAs with 21st.dev ShimmerButton */}
             <motion.div 
               variants={itemVariants}
-              className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4"
+              className="pt-2 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3"
             >
               <ShimmerButton
                 href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=Halo%20CV%20Abdi%20Hydroulic,%20saya%20ingin%20konsultasi%20rancang%20bangun%20armada%20karoseri`}
@@ -186,11 +187,24 @@ export default function Hero({ onExploreCatalog }) {
                 whileTap={{ scale: 0.98 }}
                 href="#katalog"
                 onClick={onExploreCatalog}
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-950 border border-slate-200 text-sm font-bold shadow-sm transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-white hover:bg-slate-50 text-slate-800 hover:text-slate-950 border border-slate-200 text-sm font-bold shadow-sm transition-colors"
               >
                 <Layers className="w-4 h-4 text-amber-600" />
                 <span>Eksplorasi 10 Lini Unit</span>
               </motion.a>
+
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                type="button"
+                onClick={onOpenPdfModal}
+                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-white hover:bg-amber-50/70 text-slate-800 hover:text-amber-950 border border-slate-200 hover:border-amber-400 text-sm font-bold shadow-sm transition-all group cursor-pointer"
+                title="Buka Company Profile Digital (PDF 6 Halaman)"
+              >
+                <FileText className="w-4 h-4 text-amber-600 group-hover:scale-110 transition-transform" />
+                <span>Company Profile</span>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">PDF</span>
+              </motion.button>
             </motion.div>
 
             {/* Quick Micro Technical Indicators */}
